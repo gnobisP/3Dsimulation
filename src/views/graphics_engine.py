@@ -67,12 +67,14 @@ class GraphicsEngine:
             ENTITY_TYPE["CUBE"]: ObjMesh("../assets/models/cube.obj"),
             ENTITY_TYPE["MEDKIT"]: RectMesh(w = 0.6, h = 0.5),
             ENTITY_TYPE["POINTLIGHT"]: RectMesh(w = 0.2, h = 0.2),
+            ENTITY_TYPE["STATION"]: ObjMesh("../assets/models/teste.obj"),
         }
 
         self.materials: dict[int, Material] = {
             ENTITY_TYPE["CUBE"]: Material("../assets/gfx/wood.jpeg"),
             ENTITY_TYPE["MEDKIT"]: Material("../assets/gfx/wood.jpeg"),
             ENTITY_TYPE["POINTLIGHT"]: Material("../assets/gfx/wood.jpeg"),
+            ENTITY_TYPE["STATION"]: Material("../assets/gfx/wood.jpeg"),
         }
         
         self.shaders: dict[int, Shader] = {

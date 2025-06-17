@@ -106,6 +106,37 @@ class Cube(Entity):
         if self.eulers[2] > 360:
             self.eulers[2] -= 360
 
+class Station(Entity):
+    """
+        A basic object in the world, with a position and rotation.
+    """
+    __slots__ = tuple()
+
+    def __init__(self, position: list[float], eulers: list[float]):
+        """
+            Initialize the station.
+
+            Parameters:
+
+                position: the position of the entity.
+
+                eulers: the rotation of the entity
+                        about each axis.
+        """
+        super().__init__(position, eulers)
+    
+    def update(self, dt: float, camera_pos: np.ndarray) -> None:
+        """
+            Update the station.
+
+            Parameters:
+
+                dt: framerate correction factor.
+
+                camera_pos: the position of the camera in the scene
+        """
+
+
 class Billboard(Entity):
     """
         An object which always faces towards the camera

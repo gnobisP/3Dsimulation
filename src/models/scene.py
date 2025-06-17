@@ -1,7 +1,7 @@
 import numpy as np
 
 
-from models.entity import Entity, Cube, Billboard, PointLight
+from models.entity import Entity, Cube, Billboard, PointLight, Station
 from models.camera import Camera
 
 
@@ -26,11 +26,11 @@ class Scene:
 
         self.entities: dict[int, list[Entity]] = {
             ENTITY_TYPE["CUBE"]: [
-                Cube(position = [6,0,0], eulers = [0,0,0]),
+                #Cube(position = [6,0,0], eulers = [0,0,0]),
             ],
 
             ENTITY_TYPE["MEDKIT"]: [
-                Billboard(position = [3,0,-0.5])
+                #Billboard(position = [3,0,-0.5])
             ],
             
             ENTITY_TYPE["POINTLIGHT"]: [
@@ -45,6 +45,10 @@ class Scene:
                         np.random.uniform(low=0.5, high=1.0)],
                     strength = 3)
                 for _ in range(8)
+            ],
+
+            ENTITY_TYPE["STATION"]: [
+                Station(position = [6,0,0], eulers = [0,0,0]),
             ],
         }
 
