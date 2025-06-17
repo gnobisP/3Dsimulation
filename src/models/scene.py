@@ -8,7 +8,8 @@ from models.camera import Camera
 ENTITY_TYPE = {
     "CUBE": 0,
     "POINTLIGHT": 1,
-    "MEDKIT": 2
+    "MEDKIT": 2,
+    "STATION": 3,
 }
 
 class Scene:

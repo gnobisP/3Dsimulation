@@ -21,7 +21,8 @@ UNIFORM_TYPE = {
 ENTITY_TYPE = {
     "CUBE": 0,
     "POINTLIGHT": 1,
-    "MEDKIT": 2
+    "MEDKIT": 2,
+    "STATION": 3,
 }
 PIPELINE_TYPE = {
     "Standard": 0,
