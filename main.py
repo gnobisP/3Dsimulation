@@ -1,10 +1,17 @@
 from direct.showbase.ShowBase import ShowBase
-from panda3d.core import WindowProperties, LVector3
+from panda3d.core import WindowProperties
 from panda3d.core import AmbientLight, DirectionalLight, VBase4
 from direct.actor.Actor import Actor
 import sys
 import random
 from panda3d.core import Vec3
+from panda3d.core import loadPrcFileData, WindowProperties, Vec3
+from direct.showbase.ShowBase import ShowBase
+
+# 🎯 Configurações iniciais
+loadPrcFileData('', 'win-size 1280 720')
+loadPrcFileData('', 'window-title Movimento Livre 3D')
+loadPrcFileData('', 'show-frame-rate-meter 1')
 
 class MyApp(ShowBase):
     def __init__(self):
@@ -13,16 +20,20 @@ class MyApp(ShowBase):
         # 🎥 Desativar o controle padrão da câmera
         self.disableMouse()
 
-        self.win.movePointer(0, 0, 0)
-        self.last_mouse_x = 0
-        self.last_mouse_y = 0
+        self.center_x = int(self.win.getProperties().getXSize() / 2)
+        self.center_y = int(self.win.getProperties().getYSize() / 2)
+        self.last_mouse_x = self.center_x
+        self.last_mouse_y = self.center_y
+        self.win.movePointer(0, self.center_x, self.center_y)
 
-        # 🖱️ Esconder o cursor do mouse e travar na janela
+
+
+        # 🎯 Configurar janela
         props = WindowProperties()
         props.setCursorHidden(True)
         props.setMouseMode(WindowProperties.M_confined)
         self.win.requestProperties(props)
-
+        
         # 🎇 Adicionar luz
         ambientLight = AmbientLight("ambientLight")
         ambientLight.setColor(VBase4(0.3, 0.3, 0.3, 1))
@@ -52,7 +63,6 @@ class MyApp(ShowBase):
                 x = 0
                 y = 0
                 z = 279
-
             else:
                 x = random.uniform(0, 9310.07)
                 y = random.uniform(0, 4742.64)
@@ -116,8 +126,8 @@ class MyApp(ShowBase):
         self.accept("d", self.update_key, ["right", True])
         self.accept("d-up", self.update_key, ["right", False])
 
-        self.accept("z", self.update_key, ["up", True])
-        self.accept("z-up", self.update_key, ["up", False])
+        self.accept("space", self.update_key, ["up", True])
+        self.accept("space-up", self.update_key, ["up", False])
 
         self.accept("control", self.update_key, ["down", True])
         self.accept("control-up", self.update_key, ["down", False])
@@ -147,70 +157,73 @@ class MyApp(ShowBase):
         # 🖱️ Sensibilidade do mouse
         self.mouse_sensitivity = 0.05
 
+        # 🎯 Centro da janela para resetar mouse
+        self.center_x = int(self.win.getProperties().getXSize() / 2)
+        self.center_y = int(self.win.getProperties().getYSize() / 2)
+
+        self.last_mouse_x = self.center_x
+        self.last_mouse_y = self.center_y
+
+        # Centralizar mouse no começo
+        self.win.movePointer(0, self.center_x, self.center_y)
+
         # 📦 Task para atualizar câmera
         self.taskMgr.add(self.update_camera, "update_camera")
+        self.taskMgr.add(self.update_movement, "update_movement")
+
 
     def update_key(self, key, value):
         self.key_map[key] = value
 
 
     def update_camera(self, task):
-        dt = globalClock.getDt()
-
         if self.mouseWatcherNode.hasMouse():
             md = self.win.getPointer(0)
             x = md.getX()
             y = md.getY()
 
-            # Calcula o deslocamento do mouse (delta)
+            # 🧠 Calcula delta do mouse
             dx = x - self.last_mouse_x
             dy = y - self.last_mouse_y
 
-            # Atualiza a rotação da câmera usando o delta
+            # 🔄 Atualiza rotação da câmera
             self.camera.setH(self.camera.getH() - dx * self.mouse_sensitivity)
+            self.camera.setP(self.camera.getP() - dy * self.mouse_sensitivity)
 
-            # Limitar o pitch para evitar virar a cabeça para trás
-            new_pitch = self.camera.getP() - dy * self.mouse_sensitivity
-            new_pitch = max(-90, min(90, new_pitch))
-            self.camera.setP(new_pitch)
+            # 🔥 Limita o pitch para não virar de cabeça pra baixo (opcional)
+            self.camera.setP(max(-90, min(90, self.camera.getP())))
 
-            # Resetar o ponteiro para o centro
-            self.win.movePointer(0, 0, 0)
+        self.win.movePointer(0, self.center_x, self.center_y)
+        self.last_mouse_x = self.center_x
+        self.last_mouse_y = self.center_y
 
-            # Atualiza a última posição para (0, 0) já que movePointer resetou
-            self.last_mouse_x = 0
-            self.last_mouse_y = 0
+        return task.cont
 
-        # ⌨️ Movimento
-        direction = LVector3(0, 0, 0)
+    def update_movement(self, task):
+        dt = globalClock.getDt()
+
+        direcao = Vec3(0, 0, 0)
         quat = self.camera.getQuat()
 
         if self.key_map["forward"]:
-            direction += quat.getForward()
+            direcao += quat.getForward()
         if self.key_map["backward"]:
-            direction -= quat.getForward()
+            direcao -= quat.getForward()
         if self.key_map["left"]:
-            direction -= quat.getRight()
+            direcao -= quat.getRight()
         if self.key_map["right"]:
-            direction += quat.getRight()
+            direcao += quat.getRight()
         if self.key_map["up"]:
-            direction += quat.getUp()
+            direcao += quat.getUp()
         if self.key_map["down"]:
-            direction -= quat.getUp()
+            direcao -= quat.getUp()
 
-        direction.normalize()
-
-        self.camera.setPos(self.camera.getPos() + direction * self.speed * dt)
-
-            
-        # 🖨️ Printar posição e rotação da câmera no console
-        pos = self.camera.getPos()
-        hpr = self.camera.getHpr()
-        if self.key_map["p"]:
-            print(f"📍 Posição: X={pos.getX():.2f}, Y={pos.getY():.2f}, Z={pos.getZ():.2f} | 🎯 Rotação: H={hpr.getX():.2f}, P={hpr.getY():.2f}, R={hpr.getZ():.2f}")
-
+        if direcao.length() > 0:
+            direcao.normalize()
+            self.camera.setPos(self.camera.getPos() + direcao * self.speed * dt)
 
         return task.cont
+
     
     def print_camera_position(self):
         pos = self.camera.getPos()
@@ -230,9 +243,9 @@ class MyApp(ShowBase):
         if self.key_map["arrow-up"]:
             direcao += Vec3(0, -1, 0)
         if self.key_map["arrow-left"]:
-           direcao += Vec3(-1, 0, 0)
-        if self.key_map["arrow-right"]:
            direcao += Vec3(1, 0, 0)
+        if self.key_map["arrow-right"]:
+           direcao += Vec3(-1, 0, 0)
 
         if direcao.length() > 0:
             direcao.normalize()
