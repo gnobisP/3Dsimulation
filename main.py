@@ -6,8 +6,6 @@ import sys
 import random
 from panda3d.core import Vec3
 
-
-
 class MyApp(ShowBase):
     def __init__(self):
         super().__init__()
