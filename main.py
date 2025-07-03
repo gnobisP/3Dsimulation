@@ -7,6 +7,7 @@ import random
 from panda3d.core import Vec3
 from panda3d.core import loadPrcFileData, WindowProperties, Vec3
 from direct.showbase.ShowBase import ShowBase
+import time
 
 # 🎯 Configurações iniciais
 loadPrcFileData('', 'win-size 1280 720')
@@ -26,8 +27,6 @@ class MyApp(ShowBase):
         self.last_mouse_y = self.center_y
         self.win.movePointer(0, self.center_x, self.center_y)
 
-
-
         # 🎯 Configurar janela
         props = WindowProperties()
         props.setCursorHidden(True)
@@ -46,115 +45,58 @@ class MyApp(ShowBase):
         self.render.setLight(dlnp)
 
         # 🚌 Carregar modelo
-        self.plataforma = self.loader.loadModel("models/Bus-Stop.obj")
+        self.plataforma = self.loader.loadModel("assets/cenario0.obj")
         self.plataforma.reparentTo(self.render)
         self.plataforma.setPos(0, 0, 0)
-        self.plataforma.setScale(1)
+        self.plataforma.setScale(1000)
+        
+        self.plataforma.setHpr(90,90,0)
 
-        # 🚶‍♂️ Gerar várias pessoas na cena
+               # 🚶‍♂️ Pessoas
         self.pessoas = []
-
-        for i in range(10):
-            pessoa = Actor("models/man.egg")
+        for i in range(100):
+            pessoa = Actor("assets/mod1_pessoa.egg")
             pessoa.reparentTo(self.render)
 
-            # 🎲 Posicionamento aleatório na plataforma
-            if(i==0):
-                x = 0
-                y = 0
-                z = 279
+            if i == 0:
+                x, y, z = 0, 0, 1500
             else:
                 x = random.uniform(0, 9310.07)
                 y = random.uniform(0, 4742.64)
-                z = 279
+                z = 1500
 
             pessoa.setPos(x, y, z)
-            pessoa.setScale(75)
+            pessoa.setScale(100)
 
-            # 🔍 Obter a primeira animação disponível
             animacoes = pessoa.getAnimNames()
             print(len(animacoes))
-            primeira = animacoes[0]
-
-            # 🕒 Definir o tempo de loop (ex.: 1 segundo)
-            tempo_inicio = 0
-            tempo_fim = 1.2  # segundos (ajuste como quiser)
-
-            # 🚧 Pega a duração total da animação (ajuste conforme sua animação)
-            duracao_total = 8  # 🔧 exemplo, ajuste para sua animação
-
-            # 📈 Pega número de frames
-            total_frames = pessoa.getNumFrames(primeira)
-
-            # 🔥 Função para fazer o loop parcial
-            def loop_parcial(task, p=pessoa):
-                tempo = task.time % (tempo_fim - tempo_inicio)
-                t_normalizado = tempo / (tempo_fim - tempo_inicio)
-                frame = int(t_normalizado * total_frames * (tempo_fim / duracao_total))
-                frame = min(frame, total_frames - 1)
-                p.pose(primeira, frame)
-                return task.cont
-
-            # 🚀 Iniciar o loop parcial
-            self.taskMgr.add(loop_parcial, f"loop_parcial_{i}")
-            # 🚀 Adicionar tarefa de movimento
-            # 🚀 Adicionar tarefa de movimento
-            self.taskMgr.add(self.mover, "mover")
+            if animacoes:
+                pessoa.loop(animacoes[0])
 
             self.pessoas.append(pessoa)
 
-
         # 🎮 Controle de teclas
         self.key_map = {
-            "forward": False, "backward": False,
-            "left": False, "right": False,
-            "up": False, "down": False,
+            "w": False, "s": False,
+            "a": False, "d": False,
+            "space": False, "control": False,
             "p": False,
             "arrow-up": False, "arrow-down": False, "arrow-left": False, "arrow-right": False
         }
 
         # ⌨️ Mapear teclas
-        self.accept("w", self.update_key, ["forward", True])
-        self.accept("w-up", self.update_key, ["forward", False])
+        for key in ["w","s","a","d","space", "control", "p", "arrow_up", "arrow_down", "arrow_left", "arrow_right"]:
+            self.accept(key, self.update_key, [key.replace("_", "-"), True])
+            self.accept(f"{key}-up", self.update_key, [key.replace("_", "-"), False])    
 
-        self.accept("s", self.update_key, ["backward", True])
-        self.accept("s-up", self.update_key, ["backward", False])
-
-        self.accept("a", self.update_key, ["left", True])
-        self.accept("a-up", self.update_key, ["left", False])
-
-        self.accept("d", self.update_key, ["right", True])
-        self.accept("d-up", self.update_key, ["right", False])
-
-        self.accept("space", self.update_key, ["up", True])
-        self.accept("space-up", self.update_key, ["up", False])
-
-        self.accept("control", self.update_key, ["down", True])
-        self.accept("control-up", self.update_key, ["down", False])
-
-        self.accept("p", self.update_key, ["p", True])
-        self.accept("p-up", self.update_key, ["p", False])
-
-        self.accept("arrow_up", self.update_key, ["arrow-up", True])
-        self.accept("arrow_up-up", self.update_key, ["arrow-up", False])
-
-        self.accept("arrow_down", self.update_key, ["arrow-down", True])
-        self.accept("arrow_down-up", self.update_key, ["arrow-down", False])
-
-        self.accept("arrow_left", self.update_key, ["arrow-left", True])
-        self.accept("arrow_left-up", self.update_key, ["arrow-left", False])
-
-        self.accept("arrow_right", self.update_key, ["arrow-right", True])
-        self.accept("arrow_right-up", self.update_key, ["arrow-right", False])
-
+      
 
         # ⎋ Fechar
         self.accept("escape", sys.exit)
 
-        # 🏃 Velocidade
+        # 🚀 Parâmetros
         self.speed = 1500
-
-        # 🖱️ Sensibilidade do mouse
+        self.velocidade = 500
         self.mouse_sensitivity = 0.05
 
         # 🎯 Centro da janela para resetar mouse
@@ -167,9 +109,13 @@ class MyApp(ShowBase):
         # Centralizar mouse no começo
         self.win.movePointer(0, self.center_x, self.center_y)
 
+        # ⏱️ Timer para calcular dt corretamente
+        self.last_time = time.perf_counter()
+
         # 📦 Task para atualizar câmera
         self.taskMgr.add(self.update_camera, "update_camera")
         self.taskMgr.add(self.update_movement, "update_movement")
+        self.taskMgr.add(self.mover, "mover")
 
 
     def update_key(self, key, value):
@@ -205,17 +151,17 @@ class MyApp(ShowBase):
         direcao = Vec3(0, 0, 0)
         quat = self.camera.getQuat()
 
-        if self.key_map["forward"]:
+        if self.key_map["w"]:
             direcao += quat.getForward()
-        if self.key_map["backward"]:
+        if self.key_map["s"]:
             direcao -= quat.getForward()
-        if self.key_map["left"]:
+        if self.key_map["a"]:
             direcao -= quat.getRight()
-        if self.key_map["right"]:
+        if self.key_map["d"]:
             direcao += quat.getRight()
-        if self.key_map["up"]:
+        if self.key_map["space"]:
             direcao += quat.getUp()
-        if self.key_map["down"]:
+        if self.key_map["control"]:
             direcao -= quat.getUp()
 
         if direcao.length() > 0:
@@ -232,34 +178,46 @@ class MyApp(ShowBase):
         print(f"🎯 Rotação da câmera: H={hpr.getX():.2f}, P={hpr.getY():.2f}, R={hpr.getZ():.2f}")
 
     def mover(self, task):
-        dt = globalClock.getDt()  # Tempo entre frames
+        # ⏱️ Calcular dt baseado no tempo real
+        current_time = time.perf_counter()
+        dt = current_time - self.last_time
+        self.last_time = current_time
 
-        velocidade = 50  # unidades por segundo
+        # Evitar saltos gigantes em caso de travamento
+        dt = min(dt, 0.05)  # 50 ms no máximo (~20 FPS mínimo)
 
         direcao = Vec3(0, 0, 0)
-
         if self.key_map["arrow-down"]:
             direcao += Vec3(0, 1, 0)
         if self.key_map["arrow-up"]:
             direcao += Vec3(0, -1, 0)
         if self.key_map["arrow-left"]:
-           direcao += Vec3(1, 0, 0)
+            direcao += Vec3(1, 0, 0)
         if self.key_map["arrow-right"]:
-           direcao += Vec3(-1, 0, 0)
+                direcao += Vec3(-1, 0, 0)
+
+        pessoa = self.pessoas[0]
+        nome_anim = pessoa.getAnimNames()[0] if pessoa.getAnimNames() else None
 
         if direcao.length() > 0:
             direcao.normalize()
-            pos = self.pessoas[0].getPos()
-            nova_pos = pos + direcao * velocidade * dt
-            self.pessoas[0].setPos(nova_pos)
+            nova_pos = pessoa.getPos() + direcao * self.velocidade * dt
+            pessoa.setPos(nova_pos)
 
-            # 🔄 Rotacionar na direção do movimento (opcional)
+            if nome_anim and not pessoa.getCurrentAnim():
+                pessoa.loop(nome_anim)
+
             angulo = direcao.signedAngleDeg(Vec3(0, -1, 0), Vec3(0, 0, -1))
-            self.pessoas[0].setH(angulo)
+            pessoa.setH(angulo)
+
+        else:
+            if nome_anim and pessoa.getCurrentAnim():
+                pessoa.stop()
 
         return task.cont
 
 
 
+
 app = MyApp()
-app.run()
+app.run() 
