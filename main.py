@@ -50,12 +50,18 @@ class MyApp(ShowBase):
         self.plataforma.setPos(0, 0, 0)
         self.plataforma.setScale(1000)
         
+        # Caregar tablet
+        tablet = self.loader.loadModel("assets/tabletPronto.bam")
+        tablet.reparentTo(self.render)
+        tablet.setPos(0, 0, 0)
+        tablet.setScale(1000)
+
         self.plataforma.setHpr(90,90,0)
 
-               # 🚶‍♂️ Pessoas
+        # 🚶‍♂️ Pessoas
         self.pessoas = []
         for i in range(100):
-            pessoa = Actor("assets/mod1_pessoa.egg")
+            pessoa = Actor("assets/push_up.bam")
             pessoa.reparentTo(self.render)
 
             if i == 0:
@@ -66,7 +72,7 @@ class MyApp(ShowBase):
                 z = 1500
 
             pessoa.setPos(x, y, z)
-            pessoa.setScale(100)
+            pessoa.setScale(1)
 
             animacoes = pessoa.getAnimNames()
             print(len(animacoes))
