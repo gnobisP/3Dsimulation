@@ -2,12 +2,14 @@ from direct.showbase.ShowBase import ShowBase
 from panda3d.core import WindowProperties
 from panda3d.core import AmbientLight, DirectionalLight, VBase4
 from direct.actor.Actor import Actor
+from direct.showbase.ShowBaseGlobal import globalClock
 import sys
 import random
 from panda3d.core import Vec3
 from panda3d.core import loadPrcFileData, WindowProperties, Vec3
 from direct.showbase.ShowBase import ShowBase
 import time
+from controllers.tablet_controller import create_video_tablet
 
 # 🎯 Configurações iniciais
 loadPrcFileData('', 'win-size 1280 720')
@@ -50,11 +52,16 @@ class MyApp(ShowBase):
         self.plataforma.setPos(0, 0, 0)
         self.plataforma.setScale(1000)
         
-        # Caregar tablet
-        tablet = self.loader.loadModel("assets/tabletPronto.bam")
-        tablet.reparentTo(self.render)
-        tablet.setPos(0, 0, 0)
-        tablet.setScale(1000)
+        self.tablet = create_video_tablet(
+            loader=self.loader,
+            render=self.render,
+            video_path="assets/videos/flexao.mp4",
+            position=(20, 0, 0),
+            scale=10,
+        )
+
+
+
 
         self.plataforma.setHpr(90,90,0)
 
@@ -75,7 +82,7 @@ class MyApp(ShowBase):
             pessoa.setScale(1)
 
             animacoes = pessoa.getAnimNames()
-            print(len(animacoes))
+            #print(len(animacoes))
             if animacoes:
                 pessoa.loop(animacoes[0])
 
@@ -180,8 +187,8 @@ class MyApp(ShowBase):
     def print_camera_position(self):
         pos = self.camera.getPos()
         hpr = self.camera.getHpr()
-        print(f"📍 Posição da câmera: X={pos.getX():.2f}, Y={pos.getY():.2f}, Z={pos.getZ():.2f}")
-        print(f"🎯 Rotação da câmera: H={hpr.getX():.2f}, P={hpr.getY():.2f}, R={hpr.getZ():.2f}")
+        #print(f"📍 Posição da câmera: X={pos.getX():.2f}, Y={pos.getY():.2f}, Z={pos.getZ():.2f}")
+        #print(f"🎯 Rotação da câmera: H={hpr.getX():.2f}, P={hpr.getY():.2f}, R={hpr.getZ():.2f}")
 
     def mover(self, task):
         # ⏱️ Calcular dt baseado no tempo real
@@ -226,4 +233,4 @@ class MyApp(ShowBase):
 
 
 app = MyApp()
-app.run() 
+app.run()
