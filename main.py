@@ -10,7 +10,7 @@ from direct.showbase.ShowBase import ShowBase
 import time
 from controllers.personagem_controller import create_personagens
 from controllers.tablet_controller import create_suporte_and_tablet_video
-
+from controllers.chapa_controller import create_image_chapa
 # 🎯 Configurações iniciais
 loadPrcFileData('', 'win-size 1280 720')
 loadPrcFileData('', 'window-title Movimento Livre 3D')
@@ -51,6 +51,7 @@ class MyApp(ShowBase):
         self.plataforma.reparentTo(self.render)
         self.plataforma.setPos(0, 0, 0)
         self.plataforma.setScale(1000)
+        self.plataforma.setHpr(90,90,0)
         self.plataforma.setHpr(90,90,0)
 
         # 🚌 Carregar tapete
