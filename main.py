@@ -1,7 +1,6 @@
 from direct.showbase.ShowBase import ShowBase
 from panda3d.core import WindowProperties
 from panda3d.core import AmbientLight, DirectionalLight, VBase4
-from direct.actor.Actor import Actor
 from direct.showbase.ShowBaseGlobal import globalClock
 import sys
 import random
@@ -9,7 +8,8 @@ from panda3d.core import Vec3
 from panda3d.core import loadPrcFileData, WindowProperties, Vec3
 from direct.showbase.ShowBase import ShowBase
 import time
-from controllers.tablet_controller import create_video_tablet
+from controllers.personagem_controller import create_personagens
+from controllers.tablet_controller import create_suporte_and_tablet_video
 
 # 🎯 Configurações iniciais
 loadPrcFileData('', 'win-size 1280 720')
@@ -51,42 +51,73 @@ class MyApp(ShowBase):
         self.plataforma.reparentTo(self.render)
         self.plataforma.setPos(0, 0, 0)
         self.plataforma.setScale(1000)
-        
-        self.tablet = create_video_tablet(
+        self.plataforma.setHpr(90,90,0)
+
+        # 🚌 Carregar tapete
+        self.plataforma = self.loader.loadModel("assets/tapete.dae")
+        self.plataforma.reparentTo(self.render)
+        self.plataforma.setPos(-950, 2700, 215)
+        self.plataforma.setScale(100)
+        self.plataforma.setSx(120)
+        self.plataforma.setHpr(90,90,0)
+        self.plataforma.setTextureOff(1)
+        self.plataforma.setMaterialOff(1)
+        self.plataforma.setColorScale(0, 0, 0, 1)
+        self.plataforma.setLightOff()
+
+        # Carregar suporte tablet + video tablet
+        self.plataforma = create_suporte_and_tablet_video(
             loader=self.loader,
             render=self.render,
             video_path="assets/videos/flexao.mp4",
-            position=(20, 0, 0),
-            scale=10,
+            position=(-1600, 2950, 0),
+            scale=0.5,
+            suporte_scale_z=500,
+            tablet_position_z=250,
+        )
+
+        # 🚶‍♂️ Pessoas
+        self.personagem1 = create_personagens(
+            self.render,
+            (-1280, 2700, 250),
+            6,
+            "assets/push_up.bam",
+        )
+
+        self.personagem2 = create_personagens(
+            self.render,
+            (920, 2700, 250),
+            600,
+            "assets/jumping_jacks.bam",
         )
 
 
 
-
+        #####################
+        # 🚌 Carregar tapete
+        self.plataforma = self.loader.loadModel("assets/tapete.dae")
+        self.plataforma.reparentTo(self.render)
+        self.plataforma.setPos(1250, 2700, 215)
+        self.plataforma.setScale(100)
+        self.plataforma.setSx(120)
         self.plataforma.setHpr(90,90,0)
+        self.plataforma.setTextureOff(1)
+        self.plataforma.setMaterialOff(1)
+        self.plataforma.setColorScale(0, 0, 0, 1)
+        self.plataforma.setLightOff()
 
-        # 🚶‍♂️ Pessoas
-        self.pessoas = []
-        for i in range(100):
-            pessoa = Actor("assets/push_up.bam")
-            pessoa.reparentTo(self.render)
+        # Carregar suporte tablet + video tablet
+        self.plataforma = create_suporte_and_tablet_video(
+            loader=self.loader,
+            render=self.render,
+            video_path="assets/videos/flexao.mp4",
+            position=(600, 2950, 0),
+            scale=0.5,
+            suporte_scale_z=1300,
+            tablet_position_z=750,
+        )
 
-            if i == 0:
-                x, y, z = 0, 0, 1500
-            else:
-                x = random.uniform(0, 9310.07)
-                y = random.uniform(0, 4742.64)
-                z = 1500
 
-            pessoa.setPos(x, y, z)
-            pessoa.setScale(1)
-
-            animacoes = pessoa.getAnimNames()
-            #print(len(animacoes))
-            if animacoes:
-                pessoa.loop(animacoes[0])
-
-            self.pessoas.append(pessoa)
 
         # 🎮 Controle de teclas
         self.key_map = {
@@ -209,7 +240,7 @@ class MyApp(ShowBase):
         if self.key_map["arrow-right"]:
                 direcao += Vec3(-1, 0, 0)
 
-        pessoa = self.pessoas[0]
+        pessoa = self.personagem1
         nome_anim = pessoa.getAnimNames()[0] if pessoa.getAnimNames() else None
 
         if direcao.length() > 0:
@@ -223,9 +254,9 @@ class MyApp(ShowBase):
             angulo = direcao.signedAngleDeg(Vec3(0, -1, 0), Vec3(0, 0, -1))
             pessoa.setH(angulo)
 
-        else:
-            if nome_anim and pessoa.getCurrentAnim():
-                pessoa.stop()
+        #else:
+            #if nome_anim and pessoa.getCurrentAnim():
+                #pessoa.stop()
 
         return task.cont
 
