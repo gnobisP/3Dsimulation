@@ -49,9 +49,8 @@ class MyApp(ShowBase):
         # 🚌 Carregar modelo
         self.plataforma = self.loader.loadModel("assets/cenario0.obj")
         self.plataforma.reparentTo(self.render)
-        self.plataforma.setPos(0, 0, 0)
-        self.plataforma.setScale(1000)
-        self.plataforma.setHpr(90,90,0)
+        self.plataforma.setPos(750, 00, 0)
+        self.plataforma.setScale(1000,1000,1500)
         self.plataforma.setHpr(90,90,0)
 
         # 🚌 Carregar tapete
@@ -66,6 +65,32 @@ class MyApp(ShowBase):
         self.plataforma.setColorScale(0, 0, 0, 1)
         self.plataforma.setLightOff()
 
+        # 🚌 Carregar tapete
+        self.plataforma = self.loader.loadModel("assets/tapete.dae")
+        self.plataforma.reparentTo(self.render)
+        self.plataforma.setPos(1250, 2700, 215)
+        self.plataforma.setScale(100)
+        self.plataforma.setSx(120)
+        self.plataforma.setHpr(90,90,0)
+        self.plataforma.setTextureOff(1)
+        self.plataforma.setMaterialOff(1)
+        self.plataforma.setColorScale(0, 0, 0, 1)
+        self.plataforma.setLightOff()
+
+        # 🚌 Carregar tapete
+        self.plataforma = self.loader.loadModel("assets/tapete.dae")
+        self.plataforma.reparentTo(self.render)
+        self.plataforma.setPos(3450, 2700, 215)
+        self.plataforma.setScale(100)
+        self.plataforma.setSx(120)
+        self.plataforma.setHpr(90,90,0)
+        self.plataforma.setTextureOff(1)
+        self.plataforma.setMaterialOff(1)
+        self.plataforma.setColorScale(0, 0, 0, 1)
+        self.plataforma.setLightOff()
+
+
+
         # Carregar suporte tablet + video tablet
         self.plataforma = create_suporte_and_tablet_video(
             loader=self.loader,
@@ -76,6 +101,27 @@ class MyApp(ShowBase):
             suporte_scale_z=500,
             tablet_position_z=250,
         )
+        # Carregar suporte tablet + video tablet
+        self.plataforma = create_suporte_and_tablet_video(
+            loader=self.loader,
+            render=self.render,
+            video_path="assets/videos/polichinelo.mp4",
+            position=(600, 2950, 0),
+            scale=0.5,
+            suporte_scale_z=1300,
+            tablet_position_z=750,
+        )
+        # Carregar suporte tablet + video tablet
+        self.plataforma = create_suporte_and_tablet_video(
+            loader=self.loader,
+            render=self.render,
+            video_path="assets/videos/polichinelo.mp4",
+            position=(2800, 2950, 0),
+            scale=0.5,
+            suporte_scale_z=1300,
+            tablet_position_z=750,
+        )
+
 
         # 🚶‍♂️ Pessoas
         self.personagem1 = create_personagens(
@@ -89,34 +135,22 @@ class MyApp(ShowBase):
             self.render,
             (920, 2700, 250),
             600,
+         
             "assets/jumping_jacks.bam",
         )
+        
+        self.personagem3 = create_personagens(
+            self.render,
+            (3120, 2700, 250),
+            600,
+            "assets/agachamento.bam",
+        )
+
 
 
 
         #####################
-        # 🚌 Carregar tapete
-        self.plataforma = self.loader.loadModel("assets/tapete.dae")
-        self.plataforma.reparentTo(self.render)
-        self.plataforma.setPos(1250, 2700, 215)
-        self.plataforma.setScale(100)
-        self.plataforma.setSx(120)
-        self.plataforma.setHpr(90,90,0)
-        self.plataforma.setTextureOff(1)
-        self.plataforma.setMaterialOff(1)
-        self.plataforma.setColorScale(0, 0, 0, 1)
-        self.plataforma.setLightOff()
 
-        # Carregar suporte tablet + video tablet
-        self.plataforma = create_suporte_and_tablet_video(
-            loader=self.loader,
-            render=self.render,
-            video_path="assets/videos/flexao.mp4",
-            position=(600, 2950, 0),
-            scale=0.5,
-            suporte_scale_z=1300,
-            tablet_position_z=750,
-        )
 
 
 
