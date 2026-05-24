@@ -10,7 +10,7 @@ from panda3d.core import loadPrcFileData, WindowProperties, Vec3
 from direct.showbase.ShowBase import ShowBase
 import time
 from controllers.tablet_controller import create_video_tablet
-
+from controllers.chapa_controller import create_image_chapa
 # 🎯 Configurações iniciais
 loadPrcFileData('', 'win-size 1280 720')
 loadPrcFileData('', 'window-title Movimento Livre 3D')
@@ -51,6 +51,7 @@ class MyApp(ShowBase):
         self.plataforma.reparentTo(self.render)
         self.plataforma.setPos(0, 0, 0)
         self.plataforma.setScale(1000)
+        self.plataforma.setHpr(90,90,0)
         
         self.tablet = create_video_tablet(
             loader=self.loader,
@@ -60,10 +61,24 @@ class MyApp(ShowBase):
             scale=10,
         )
 
+        # Tapete
+        self.tapete = self.loader.loadModel("assets/tapete.dae")
+        self.tapete.reparentTo(self.render)
+        self.tapete.setPos(-500, 0, 230)
+        self.tapete.setScale(100)
+        self.tapete.setHpr(90, 90, 0)
 
+        texturaTapete = self.loader.loadTexture("assets/base.png")
+        self.tapete.setTexture(texturaTapete)
 
-
-        self.plataforma.setHpr(90,90,0)
+        # Chapa
+        self.chapa = create_image_chapa(
+            loader=self.loader,
+            render=self.render,
+            image_path="assets/camera_lens_PNG12.png",
+            position=(-500, 0, 275),
+            scale=100
+        )
 
         # 🚶‍♂️ Pessoas
         self.pessoas = []
