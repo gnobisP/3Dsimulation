@@ -47,7 +47,7 @@ class MyApp(ShowBase):
         self.render.setLight(dlnp)
 
         # 🚌 Carregar modelo
-        self.plataforma = self.loader.loadModel("assets/cenario0.obj")
+        self.plataforma = self.loader.loadModel("assets/room.obj")
         self.plataforma.reparentTo(self.render)
         self.plataforma.setPos(750, 00, 0)
         self.plataforma.setScale(1000,1000,1500)
@@ -115,7 +115,7 @@ class MyApp(ShowBase):
         self.plataforma = create_suporte_and_tablet_video(
             loader=self.loader,
             render=self.render,
-            video_path="assets/videos/polichinelo.mp4",
+            video_path="assets/videos/agachamento.mp4",
             position=(2800, 2950, 0),
             scale=0.5,
             suporte_scale_z=1300,
