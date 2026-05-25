@@ -47,7 +47,7 @@ class MyApp(ShowBase):
         self.render.setLight(dlnp)
 
         # 🚌 Carregar modelo
-        self.plataforma = self.loader.loadModel("assets/cenario0.obj")
+        self.plataforma = self.loader.loadModel("assets/room.obj")
         self.plataforma.reparentTo(self.render)
         self.plataforma.setPos(750, 00, 0)
         self.plataforma.setScale(1000,1000,1500)
