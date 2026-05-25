@@ -100,7 +100,7 @@ class MyApp(ShowBase):
         self.plataforma = create_video_chapa(
             loader=self.loader,
             render=self.render,
-            video_path="assets/videos/polichinelo_tapete2.mp4",
+            video_path="assets/videos/polichinelo_corretoSempre.mp4",
             position=(875, 2700, 260),
             scale=90
         )
@@ -108,7 +108,7 @@ class MyApp(ShowBase):
         self.plataforma = create_video_chapa(
             loader=self.loader,
             render=self.render,
-            video_path="assets/videos/polichinelo_tapete2.mp4",
+            video_path="assets/videos/agachamento_tapete.mp4",
             position=(3075, 2700, 260),
             scale=90
         )
@@ -163,7 +163,7 @@ class MyApp(ShowBase):
         
         self.personagem3 = create_personagens(
             self.render,
-            (3120, 2700, 250),
+            (3025, 2700, 250),
             600,
             "assets/agachamento.bam",
         )
