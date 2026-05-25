@@ -10,7 +10,7 @@ from direct.showbase.ShowBase import ShowBase
 import time
 from controllers.personagem_controller import create_personagens
 from controllers.tablet_controller import create_suporte_and_tablet_video
-from controllers.chapa_controller import create_image_chapa
+from controllers.chapa_controller import create_video_chapa
 # 🎯 Configurações iniciais
 loadPrcFileData('', 'win-size 1280 720')
 loadPrcFileData('', 'window-title Movimento Livre 3D')
@@ -89,7 +89,29 @@ class MyApp(ShowBase):
         self.plataforma.setColorScale(0, 0, 0, 1)
         self.plataforma.setLightOff()
 
+        self.plataforma = create_video_chapa(
+            loader=self.loader,
+            render=self.render,
+            video_path="assets/videos/flexao_tapete2.mp4",
+            position=(-1325, 2600, 260),
+            scale=90
+        )
 
+        self.plataforma = create_video_chapa(
+            loader=self.loader,
+            render=self.render,
+            video_path="assets/videos/polichinelo_tapete2.mp4",
+            position=(875, 2700, 260),
+            scale=90
+        )
+
+        self.plataforma = create_video_chapa(
+            loader=self.loader,
+            render=self.render,
+            video_path="assets/videos/polichinelo_tapete2.mp4",
+            position=(3075, 2700, 260),
+            scale=90
+        )
 
         # Carregar suporte tablet + video tablet
         self.plataforma = create_suporte_and_tablet_video(
@@ -126,7 +148,7 @@ class MyApp(ShowBase):
         # 🚶‍♂️ Pessoas
         self.personagem1 = create_personagens(
             self.render,
-            (-1280, 2700, 250),
+            (-1480, 2750, 250),
             6,
             "assets/push_up.bam",
         )
