@@ -92,15 +92,15 @@ class MyApp(ShowBase):
         self.plataforma = create_video_chapa(
             loader=self.loader,
             render=self.render,
-            video_path="assets/videos/flexao_tapete.mp4",
-            position=(-1325, 2700, 260),
+            video_path="assets/videos/flexao_tapete2.mp4",
+            position=(-1325, 2600, 260),
             scale=90
         )
 
         self.plataforma = create_video_chapa(
             loader=self.loader,
             render=self.render,
-            video_path="assets/videos/polichinelo_tapete.mp4",
+            video_path="assets/videos/polichinelo_tapete2.mp4",
             position=(875, 2700, 260),
             scale=90
         )
@@ -108,7 +108,7 @@ class MyApp(ShowBase):
         self.plataforma = create_video_chapa(
             loader=self.loader,
             render=self.render,
-            video_path="assets/videos/polichinelo_tapete.mp4",
+            video_path="assets/videos/polichinelo_tapete2.mp4",
             position=(3075, 2700, 260),
             scale=90
         )
